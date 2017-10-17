@@ -23,8 +23,8 @@ extern "C" {
     #include "sha1.h",
     #include "x15.h"
     #include "fresh.h"
-    #include "lyra2re.h"
-    #include "lyra2z.h"
+    #include "Lyra2RE.h"
+    #include "Lyra2Z.h"
 }
 
 #include "boolberry.h"
