@@ -24,7 +24,7 @@ extern "C" {
     #include "x15.h"
     #include "fresh.h"
     #include "Lyra2RE.h"
-    #include "Lyra2Z.h",
+    #include "Lyra2Z.h"
 }
 
 #include "boolberry.h"
