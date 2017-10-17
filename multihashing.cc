@@ -23,7 +23,8 @@ extern "C" {
     #include "sha1.h"
     #include "x15.h"
     #include "fresh.h"
-
+    #include "Lyra2RE.h"
+    #include "Lyra2Z.h"
 }
 
 #include "boolberry.h"
@@ -614,7 +615,7 @@ Handle<Value> lyra2re2(const Arguments& args) {
 
     uint32_t input_len = Buffer::Length(target);
 
-    lyra2re2_hash(input, output, input_len);
+    lyra2re2_hash(input, output);
 
     Buffer* buff = Buffer::New(output, 32);
     return scope.Close(buff->handle_);
@@ -636,7 +637,7 @@ Handle<Value> lyra2z(const Arguments& args) {
 
     uint32_t input_len = Buffer::Length(target);
 
-    lyra2z_hash(input, output, input_len);
+    lyra2z_hash(input, output);
 
     Buffer* buff = Buffer::New(output, 32);
     return scope.Close(buff->handle_);
