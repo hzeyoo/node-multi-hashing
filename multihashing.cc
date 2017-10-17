@@ -22,7 +22,9 @@ extern "C" {
     #include "nist5.h"
     #include "sha1.h",
     #include "x15.h"
-	#include "fresh.h"
+    #include "fresh.h"
+    #include "lyra2re.h"
+    #include "lyra2z.h"
 }
 
 #include "boolberry.h"
@@ -305,6 +307,29 @@ Handle<Value> blake(const Arguments& args) {
 }
 
 
+Handle<Value> decred(const Arguments& args) {
+    HandleScope scope;
+
+    if (args.Length() < 1)
+        return except("You must provide one argument.");
+
+    Local<Object> target = args[0]->ToObject();
+
+    if(!Buffer::HasInstance(target))
+        return except("Argument should be a buffer object.");
+
+    char * input = Buffer::Data(target);
+    char output[32];
+    
+    uint32_t input_len = Buffer::Length(target);
+
+    decred_hash(input, output, input_len);
+
+    Buffer* buff = Buffer::New(output, 32);
+    return scope.Close(buff->handle_);
+}
+
+
 Handle<Value> fugue(const Arguments& args) {
     HandleScope scope;
 
@@ -574,6 +599,50 @@ Handle<Value> fresh(const Arguments& args) {
     return scope.Close(buff->handle_);
 }
 
+Handle<Value> lyra2re2(const Arguments& args) {
+    HandleScope scope;
+
+    if (args.Length() < 1)
+        return except("You must provide one argument.");
+
+    Local<Object> target = args[0]->ToObject();
+
+    if(!Buffer::HasInstance(target))
+        return except("Argument should be a buffer object.");
+
+    char * input = Buffer::Data(target);
+    char output[32];
+
+    uint32_t input_len = Buffer::Length(target);
+
+    lyra2re2_hash(input, output, input_len);
+
+    Buffer* buff = Buffer::New(output, 32);
+    return scope.Close(buff->handle_);
+}
+
+Handle<Value> lyra2z(const Arguments& args) {
+    HandleScope scope;
+
+    if (args.Length() < 1)
+        return except("You must provide one argument.");
+
+    Local<Object> target = args[0]->ToObject();
+
+    if(!Buffer::HasInstance(target))
+        return except("Argument should be a buffer object.");
+
+    char * input = Buffer::Data(target);
+    char output[32];
+
+    uint32_t input_len = Buffer::Length(target);
+
+    lyra2z_hash(input, output, input_len);
+
+    Buffer* buff = Buffer::New(output, 32);
+    return scope.Close(buff->handle_);
+}
+
 void init(Handle<Object> exports) {
     exports->Set(String::NewSymbol("quark"), FunctionTemplate::New(quark)->GetFunction());
     exports->Set(String::NewSymbol("x11"), FunctionTemplate::New(x11)->GetFunction());
@@ -586,6 +655,7 @@ void init(Handle<Object> exports) {
     exports->Set(String::NewSymbol("groestl"), FunctionTemplate::New(groestl)->GetFunction());
     exports->Set(String::NewSymbol("groestlmyriad"), FunctionTemplate::New(groestlmyriad)->GetFunction());
     exports->Set(String::NewSymbol("blake"), FunctionTemplate::New(blake)->GetFunction());
+    exports->Set(String::NewSymbol("decred"), FunctionTemplate::New(decred)->GetFunction());
     exports->Set(String::NewSymbol("fugue"), FunctionTemplate::New(fugue)->GetFunction());
     exports->Set(String::NewSymbol("qubit"), FunctionTemplate::New(qubit)->GetFunction());
     exports->Set(String::NewSymbol("hefty1"), FunctionTemplate::New(hefty1)->GetFunction());
@@ -597,6 +667,8 @@ void init(Handle<Object> exports) {
     exports->Set(String::NewSymbol("sha1"), FunctionTemplate::New(sha1)->GetFunction());
     exports->Set(String::NewSymbol("x15"), FunctionTemplate::New(x15)->GetFunction());
     exports->Set(String::NewSymbol("fresh"), FunctionTemplate::New(fresh)->GetFunction());
+    exports->Set(String::NewSymbol("lyra2re2"), FunctionTemplate::New(lyra2re2)->GetFunction());
+    exports->Set(String::NewSymbol("lyra2z"), FunctionTemplate::New(lyra2z)->GetFunction());
 }
 
 NODE_MODULE(multihashing, init)
